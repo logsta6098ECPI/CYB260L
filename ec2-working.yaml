@@ -13,7 +13,3 @@ Resources:
       InstanceType: t2.micro
       NetworkInterfaces:
         - AssociatePublicIpAddress: "true"
-	  DeviceIndex: "0"
-  Instance:
-    Type: AWS::EC2::Instance
-    Properties: {}
