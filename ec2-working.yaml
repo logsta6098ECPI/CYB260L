@@ -1,15 +1,25 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: Amazon Elastic Compute Cloud (EC2) Template
+
 Parameters:
   LatestAmiId:
-    Type : "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>"
+    Type: "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>"
     Default: "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
+  
+  # Added a proper KeyPair parameter
+  KeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access
+    Type: "AWS::EC2::KeyPair::KeyName"
+
 Resources:
   Ec2Instance:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: !Ref LatestAmiId
-      KeyName: !Ref AWS::AccountId
+      KeyName: !Ref KeyName
       InstanceType: t2.micro
       NetworkInterfaces:
         - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          # Note: You usually need a SubnetId here if using NetworkInterfaces
+          # SubnetId: "subnet-xxxxxx"
