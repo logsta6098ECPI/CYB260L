@@ -5,11 +5,16 @@ Parameters:
   LatestAmiId:
     Type: "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>"
     Default: "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
-  
-  # Added a proper KeyPair parameter
+
+  # FIX: You must provide a real KeyPair name, not an Account ID
   KeyName:
-    Description: Name of an existing EC2 KeyPair to enable SSH access
     Type: "AWS::EC2::KeyPair::KeyName"
+    Description: Name of an existing EC2 KeyPair to enable SSH access
+
+  # FIX: NetworkInterfaces usually requires a SubnetId
+  SubnetId:
+    Type: "AWS::EC2::Subnet::Id"
+    Description: Subnet ID in your VPC
 
 Resources:
   Ec2Instance:
@@ -21,5 +26,4 @@ Resources:
       NetworkInterfaces:
         - AssociatePublicIpAddress: "true"
           DeviceIndex: "0"
-          # Note: You usually need a SubnetId here if using NetworkInterfaces
-          # SubnetId: "subnet-xxxxxx"
+          SubnetId: !Ref SubnetId
