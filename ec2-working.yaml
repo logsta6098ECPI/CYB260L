@@ -1,15 +1,28 @@
+# Description: Added a 20GB EBS volume with termination protection for persistent data storage.
+# Revision: 1.1
+# Date: 2026-02-19
+
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Amazon Elastic Compute Cloud (EC2) Template
+Description: Amazon Elastic Compute Cloud (EC2) Template with persistent EBS volume.
+
 Parameters:
   LatestAmiId:
-    Type : "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>"
+    Type: "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>"
     Default: "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
+
 Resources:
   Ec2Instance:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: !Ref LatestAmiId
-      KeyName: !Ref AWS::AccountId
+      KeyName: !Ref AWS::AccountId # Ensure a key pair exists with your Account ID as the name
       InstanceType: t2.micro
       NetworkInterfaces:
         - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+      BlockDeviceMappings:
+        - DeviceName: /dev/sdm
+          Ebs:
+            VolumeType: gp2
+            DeleteOnTermination: false
+            VolumeSize: 20
