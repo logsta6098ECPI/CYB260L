@@ -1,0 +1,61 @@
+AWSTemplateFormatVersion: '2010-09-09'
+# Description: CloudFormation template that creates a VPC in the us-west-2 (Oregon)
+# region spanning three Availability Zones with one subnet per AZ.
+# Revision: 1.0
+# Date: 2026-02-24
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: VPC-logsta6098
+
+  SubnetAZ1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: us-west-2a
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: VPC-logsta6098-Subnet-AZ1
+
+  SubnetAZ2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: us-west-2b
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: VPC-logsta6098-Subnet-AZ2
+
+  SubnetAZ3:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.3.0/24
+      AvailabilityZone: us-west-2c
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: VPC-logsta6098-Subnet-AZ3
+
+Outputs:
+  VPCId:
+    Description: ID of the created VPC
+    Value: !Ref VPC
+
+  SubnetIds:
+    Description: Comma-separated list of subnet IDs
+    Value: !Join
+      - ','
+      - - !Ref SubnetAZ1
+        - !Ref SubnetAZ2
+        - !Ref SubnetAZ3
